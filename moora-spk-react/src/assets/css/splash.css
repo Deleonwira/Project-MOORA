@@ -1,0 +1,507 @@
+/* ============================================
+   MOORA DSS — Splash Screen
+   Full-screen animated onboarding overlay
+   ============================================ */
+
+/* --- Overlay --- */
+.splash-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background-color: var(--bg-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: opacity 600ms cubic-bezier(0.4, 0, 0.2, 1),
+                transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.splash-overlay.closing {
+    opacity: 0;
+    transform: scale(1.05);
+    pointer-events: none;
+}
+
+.splash-overlay.hidden {
+    display: none;
+}
+
+/* --- Background Grid --- */
+.splash-bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridPulse 8s ease-in-out infinite;
+}
+
+@keyframes gridPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+
+/* --- Floating Particles --- */
+.splash-particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.splash-particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 50%;
+    opacity: 0;
+    animation: particleFloat linear infinite;
+}
+
+.splash-particle:nth-child(1) { left: 10%; animation-duration: 12s; animation-delay: 0s; }
+.splash-particle:nth-child(2) { left: 20%; animation-duration: 10s; animation-delay: 1s; }
+.splash-particle:nth-child(3) { left: 35%; animation-duration: 14s; animation-delay: 0.5s; }
+.splash-particle:nth-child(4) { left: 50%; animation-duration: 11s; animation-delay: 2s; }
+.splash-particle:nth-child(5) { left: 65%; animation-duration: 13s; animation-delay: 1.5s; }
+.splash-particle:nth-child(6) { left: 75%; animation-duration: 9s; animation-delay: 0.8s; }
+.splash-particle:nth-child(7) { left: 88%; animation-duration: 15s; animation-delay: 2.5s; }
+.splash-particle:nth-child(8) { left: 45%; animation-duration: 10s; animation-delay: 3s; }
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.6;
+        transform: translateY(80vh) scale(1);
+    }
+    90% {
+        opacity: 0.2;
+    }
+    100% {
+        transform: translateY(-20vh) scale(0.5);
+        opacity: 0;
+    }
+}
+
+/* --- Orbit Ring (decorative) --- */
+.splash-orbit {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border: 1px solid rgba(59, 130, 246, 0.06);
+    border-radius: 50%;
+    animation: orbitSpin 30s linear infinite;
+}
+
+.splash-orbit::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}
+
+.splash-orbit-2 {
+    width: 360px;
+    height: 360px;
+    border-color: rgba(59, 130, 246, 0.04);
+    animation-direction: reverse;
+    animation-duration: 22s;
+}
+
+@keyframes orbitSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* --- Content Container --- */
+.splash-content {
+    position: relative;
+    z-index: 2;
+    max-width: 680px;
+    width: 90%;
+    text-align: center;
+}
+
+/* --- Slides --- */
+.splash-slide {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
+}
+
+.splash-slide.active {
+    display: flex;
+    animation: slideReveal 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.splash-slide.exit {
+    display: flex;
+    animation: slideExit 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideReveal {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideExit {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+/* --- Icon Badge --- */
+.splash-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--bg-surface-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    animation: iconPulse 3s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+@keyframes iconPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.15);
+    }
+    50% {
+        box-shadow: 0 0 0 16px rgba(59, 130, 246, 0);
+    }
+}
+
+/* --- Typography --- */
+.splash-title {
+    font-size: var(--text-3xl);
+    font-weight: var(--font-semibold);
+    line-height: var(--leading-tight);
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+.splash-title .accent {
+    color: var(--accent);
+}
+
+.splash-subtitle {
+    font-size: var(--text-md);
+    color: var(--text-secondary);
+    line-height: var(--leading);
+    max-width: 520px;
+}
+
+/* --- Info Cards --- */
+.splash-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    width: 100%;
+    margin-top: var(--space-sm);
+}
+
+.splash-info-card {
+    background: var(--bg-surface-1);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg) var(--space-md);
+    text-align: center;
+    opacity: 0;
+    animation: cardReveal 500ms ease forwards;
+}
+
+.splash-info-card:nth-child(1) { animation-delay: 200ms; }
+.splash-info-card:nth-child(2) { animation-delay: 350ms; }
+.splash-info-card:nth-child(3) { animation-delay: 500ms; }
+.splash-info-card:nth-child(4) { animation-delay: 650ms; }
+
+@keyframes cardReveal {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.splash-info-icon {
+    font-size: 22px;
+    margin-bottom: var(--space-sm);
+    display: block;
+}
+
+.splash-info-label {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    margin-bottom: 2px;
+}
+
+.splash-info-value {
+    font-size: var(--text-base);
+    font-weight: var(--font-medium);
+    color: var(--text-primary);
+}
+
+/* --- Formula Display --- */
+.splash-formula {
+    background: var(--bg-surface-1);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg) var(--space-xl);
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+    animation: cardReveal 500ms ease forwards;
+    animation-delay: 300ms;
+}
+
+.splash-formula-label {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: var(--space-sm);
+}
+
+.splash-formula-content {
+    font-family: var(--font-mono);
+    font-size: var(--text-lg);
+    color: var(--accent);
+    line-height: 1.8;
+}
+
+/* --- Steps List --- */
+.splash-steps {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    text-align: left;
+}
+
+.splash-step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    background: var(--bg-surface-1);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-md) var(--space-lg);
+    opacity: 0;
+    animation: stepSlideIn 500ms ease forwards;
+}
+
+.splash-step-item:nth-child(1) { animation-delay: 200ms; }
+.splash-step-item:nth-child(2) { animation-delay: 350ms; }
+.splash-step-item:nth-child(3) { animation-delay: 500ms; }
+.splash-step-item:nth-child(4) { animation-delay: 650ms; }
+.splash-step-item:nth-child(5) { animation-delay: 800ms; }
+
+@keyframes stepSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.splash-step-num {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-xs);
+    font-family: var(--font-mono);
+    color: var(--accent);
+    margin-top: 2px;
+}
+
+.splash-step-text {
+    flex: 1;
+}
+
+.splash-step-title {
+    font-size: var(--text-base);
+    font-weight: var(--font-medium);
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.splash-step-desc {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+}
+
+/* --- Bottom Controls --- */
+.splash-controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    padding: var(--space-lg) var(--space-xl);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(transparent, var(--bg-primary) 40%);
+}
+
+/* --- Progress Dots --- */
+.splash-dots {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.splash-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--bg-surface-3);
+    transition: all 300ms ease;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+}
+
+.splash-dot.active {
+    background: var(--accent);
+    width: 24px;
+    border-radius: 4px;
+}
+
+/* --- Nav Buttons --- */
+.splash-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 10px 24px;
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    font-family: var(--font-primary);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.splash-btn:hover {
+    background: var(--bg-surface-2);
+    color: var(--text-primary);
+}
+
+.splash-btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.splash-btn-primary:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+    color: #fff;
+}
+
+.splash-btn-skip {
+    position: fixed;
+    top: var(--space-lg);
+    right: var(--space-xl);
+    z-index: 10000;
+    background: transparent;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+    padding: 6px 16px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-family: var(--font-primary);
+    transition: var(--transition);
+}
+
+.splash-btn-skip:hover {
+    border-color: var(--border);
+    color: var(--text-secondary);
+}
+
+/* --- Tag Badges (benefit/cost) in splash --- */
+.splash-tag {
+    display: inline-block;
+    font-size: var(--text-xs);
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: var(--font-medium);
+}
+
+.splash-tag-benefit {
+    background: var(--benefit-bg);
+    color: var(--benefit);
+}
+
+.splash-tag-cost {
+    background: var(--cost-bg);
+    color: var(--cost);
+}
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+    .splash-title {
+        font-size: var(--text-2xl);
+    }
+
+    .splash-subtitle {
+        font-size: var(--text-base);
+    }
+
+    .splash-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .splash-orbit,
+    .splash-orbit-2 {
+        display: none;
+    }
+
+    .splash-controls {
+        padding: var(--space-md);
+    }
+
+    .splash-formula-content {
+        font-size: var(--text-base);
+    }
+}
